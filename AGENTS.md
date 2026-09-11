@@ -1,4 +1,4 @@
-# PDF Splitter V15 — operating guide and project memory
+# FolioSplit V15 — operating guide and project memory
 
 This is the single documentation file for this repository. Read it before changing
 the pipeline, using a GPU, evaluating results, or exporting customer documents.
@@ -473,5 +473,6 @@ Keep this one guide current when behavior or validated status changes. Ship only
 runtime modules, the deployment JSON, requirements and operating scripts. Do not
 add duplicate release trees, raw responses, saved PDFs, credentials, caches or
 experiment-specific rules. The original repository and research history remain
-the evidence archive. This repository starts a fresh Git history and has no
-remote until the user supplies or authorizes a publishing destination.
+the evidence archive. This repository has a fresh Git history. Its private GitHub
+remote is https://github.com/BDDimitrov18/FolioSplit and its best-release tag is
+`best-v15`.
