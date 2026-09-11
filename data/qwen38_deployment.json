@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "id": "qwen38-27b-nvfp4-compact-v3",
+  "served_model": "qwen3.8-27b-009632fe-compact-v3",
+  "checkpoint": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+  "revision": "009632fef96dd349150baa780c984e62e70e91fe",
+  "base_model": "Qwen/Qwen3.8-27B",
+  "model_family": "qwen3.8",
+  "runtime": {
+    "engine": "sglang",
+    "image": "lmsysorg/sglang@sha256:b91d664a8e4825afc16ab831c6035a6c88ac20ef8bd26da4fe2b9813a9f44376",
+    "commit": "5f55db35e926d50676f75b812640ea2410b0fe0e",
+    "cuda": "13.0.3",
+    "minimum_linux_driver": "580.65.06",
+    "platform": "linux/amd64",
+    "entrypoint": [
+      "/opt/nvidia/nvidia_entrypoint.sh"
+    ],
+    "source_tag": "lmsysorg/sglang:dev-qwen38-27b-dflash2"
+  },
+  "quantization": "NVFP4 W4A4 MLP, FP8 attention weights, BF16 lm_head/MTP/vision tensors; FP8 E4M3 KV cache; FP32 GDN state",
+  "context_length": 32768,
+  "max_running_requests": 1,
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "tensor_parallel_size": 1,
+    "enable_multimodal": true,
+    "limit_mm_data_per_request": {
+      "image": 6,
+      "video": 0,
+      "audio": 0
+    },
+    "attention_backend": "flashinfer",
+    "kv_cache_dtype": "fp8_e4m3",
+    "mamba_ssm_dtype": "float32",
+    "mamba_radix_cache_strategy": "extra_buffer",
+    "max_mamba_cache_size": 5,
+    "chunked_prefill_size": 2048,
+    "mem_fraction_static": 0.9,
+    "cuda_graph_max_bs_decode": 1,
+    "reasoning_parser": "qwen3",
+    "speculative_decoding": false,
+    "default_chat_template_kwargs": {
+      "enable_thinking": false,
+      "preserve_thinking": false
+    },
+    "max_total_tokens": 32768,
+    "constrained_json_disable_any_whitespace": true
+  },
+  "provenance": {
+    "retrieved_on": "2026-09-05",
+    "model_card": "https://huggingface.co/RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead/tree/009632fef96dd349150baa780c984e62e70e91fe",
+    "runtime_recipe": "https://docs.sglang.io/cookbook/autoregressive/Qwen/Qwen3.8-27B",
+    "runtime_source": "https://github.com/sgl-project/sglang/tree/5f55db35e926d50676f75b812640ea2410b0fe0e",
+    "driver_requirement_source": "https://docs.nvidia.com/cuda/archive/13.0.0/cuda-toolkit-release-notes/index.html#cuda-driver",
+    "image_pin_method": "Docker registry linux/amd64 manifest digest; commit and CUDA version read from image configuration",
+    "checkpoint_weight_bytes": 23749063264,
+    "compressed_image_layer_bytes": 14676200256,
+    "published_recipe_source_commit": "1cf2b8c54d81802abc15dcf23a29b9cc687bc01e",
+    "local_gpu_validation": "pending",
+    "note": "Declared deployment identity, not server attestation. The recipe's pip source commit differs from its Docker image's actual build commit. This pilot pins the actual Docker image and limits context, request count and image count; its PDF workload has not yet been measured.",
+    "runtime_adjustment": {
+      "date": "2026-09-05",
+      "parent_deployment": "qwen38-27b-nvfp4-v1",
+      "changed_setting": "max_total_tokens: auto (158422 allocated on the pilot GPU) -> 32768",
+      "reason": "The original server allocated about 4.84 GiB of KV cache for 158422 tokens although context and concurrency were limited to 32768 and one. Cap the pool at 32768 tokens to reserve image-processing memory after the first three-page smoke hit CUDA OOM. No ground-truth labels used.",
+      "failed_run": "experiments/qwen38-pilot-20260905/smoke-off",
+      "validation": "Two real three-page windows passed in off and medium modes on RTX 5090; full evaluation and accuracy measurement remain separate."
+    },
+    "compact_json_adjustment": {
+      "date": "2026-09-06",
+      "parent_deployment": "qwen38-27b-nvfp4-vision-v2",
+      "reason": "Medium title extraction exhausted 16384 completion tokens; captured final contained 176148 characters, predominantly syntactic whitespace after a title string. Enforce compact JSON in xgrammar to remove unbounded syntactic whitespace. Completion cap raised independently to 16384.",
+      "validation": "pending live GPU regression and smoke"
+    }
+  }
+}

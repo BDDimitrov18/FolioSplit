@@ -1,0 +1,6 @@
+# Lightweight Python client; the GPU runtime is pinned separately in the server image.
+# Keep PDF rendering identical to the baseline requirements.
+pypdf==6.13.2
+pdf2image==1.17.0
+Pillow==10.4.0
+pytesseract==0.3.13
